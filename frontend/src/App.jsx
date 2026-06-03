@@ -61,7 +61,7 @@ function App() {
     try {
       setLoading(true);
 
-      const response = await fetch("http://127.0.0.1:5000/lookup", {
+      const response = await fetch("https://shemya-backend.onrender.com/lookup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
