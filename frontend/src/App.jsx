@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import { jsPDF } from "jspdf";
+import logo from "./assets/shemyanetlogo.jpg";
 
 function App() {
   const [search, setSearch] = useState("");
@@ -111,6 +112,7 @@ function App() {
 
   return (
     <div className="container">
+      <img src={logo} alt="ShemyaNet Logo" className="logo" />
       <h1 className="title">ShemyaNet Transaction Lookup</h1>
 
       {/* SEARCH */}
@@ -124,7 +126,7 @@ function App() {
 
         <input
           type="text"
-          placeholder="Enter IP address only (e.g. 192.168.1.1)"
+          placeholder="Enter IP address only (e.g. 10.0.0.0)"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
