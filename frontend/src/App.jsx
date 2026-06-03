@@ -94,7 +94,7 @@ function App() {
     const doc = new jsPDF();
 
     doc.setFont("helvetica", "bold");
-    doc.text("STORE RECEIPT", 20, 20);
+    doc.text("SHEMYANET RECEIPT", 20, 20);
 
     doc.setFont("helvetica", "normal");
 
