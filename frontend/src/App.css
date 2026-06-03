@@ -375,3 +375,60 @@
   color: red;
 }
 
+/* Force consistent color theme */
+:root {
+--text: #d1d5db;
+--text-h: #ffffff;
+--bg: #16171d;
+--border: #2e303a;
+
+color-scheme: dark;
+}
+
+/* Remove the prefers-color-scheme block entirely */
+/* Delete:
+@media (prefers-color-scheme: dark) {
+...
+}
+*/
+
+/* Container */
+.container {
+font-family: Arial, sans-serif;
+padding: 20px;
+}
+
+/* Page */
+body {
+margin: 0;
+background: #16171d;
+}
+
+/* Title */
+.title {
+color: #ffffff !important;
+font-size: 56px;
+font-weight: 600;
+text-align: center;
+margin-bottom: 24px;
+text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* Headings */
+h1,
+h2 {
+color: #ffffff;
+}
+
+h1 {
+font-size: 56px;
+margin: 32px 0;
+}
+
+@media (max-width: 1024px) {
+.title,
+h1 {
+font-size: 36px;
+}
+}
+
