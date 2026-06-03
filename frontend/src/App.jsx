@@ -115,6 +115,7 @@ function App() {
 
       {/* SEARCH */}
       <div className="search-box">
+        <label className="search-label">Search Date</label>
         <input
           type="date"
           value={date}

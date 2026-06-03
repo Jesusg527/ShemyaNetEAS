@@ -432,3 +432,8 @@ font-size: 36px;
 }
 }
 
+.search-label{
+  margin-right: 10px;
+  font-weight: 600;
+  color: #ffffff;
+}
