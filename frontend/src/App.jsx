@@ -144,7 +144,7 @@ function App() {
         {results.map((item, index) => (
           <div className="receipt" key={index}>
             <div className="receipt-header">
-              <h2>STORE RECEIPT</h2>
+              <h2>SHEMYANET RECEIPT</h2>
               <p>Transaction Record</p>
             </div>
 
