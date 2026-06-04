@@ -1,203 +1,209 @@
 import { useState } from "react";
 import "./App.css";
 import { jsPDF } from "jspdf";
-import logo from "./assets/shemyanetlogo.jpg";
+import logo from "./assets/shemyanetlogo.JPG";
 
 function App() {
-  const [search, setSearch] = useState("");
-  const [date, setDate] = useState("");
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+const [search, setSearch] = useState("");
+const [date, setDate] = useState("");
+const [results, setResults] = useState([]);
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState("");
+const [hasSearched, setHasSearched] = useState(false);
 
-  // ---------------------------
-  // IP VALIDATION ONLY
-  // ---------------------------
-  const isValidIP = (value) => {
-    const ipRegex =
-      /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/;
-    return ipRegex.test(value);
-  };
+const isValidIP = (value) => {
+const ipRegex =
+/^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/;
 
-  // ---------------------------
-  // DATE FORMAT (POS STYLE)
-  // ---------------------------
-  const formatPOSDate = (dateString) => {
-    if (!dateString) return "";
 
-    const d = new Date(dateString);
-    const pad = (n) => String(n).padStart(2, "0");
+return ipRegex.test(value);
 
-    return (
-      `${pad(d.getMonth() + 1)}/${pad(d.getDate())}/${d.getFullYear()} ` +
-      `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
-    );
-  };
 
-  // ---------------------------
-  // SEARCH
-  // ---------------------------
-  const handleSearch = async () => {
-    setError("");
-    setResults([]);
+};
 
-    const cleaned = search.trim();
+const formatPOSDate = (dateString) => {
+if (!dateString) return "";
 
-    if (!cleaned) {
-      setError("Enter IP address");
-      return;
-    }
 
-    if (!date) {
-      setError("Select a date");
-      return;
-    }
+const d = new Date(dateString);
+const pad = (n) => String(n).padStart(2, "0");
 
-    // ❌ ONLY IP ALLOWED
-    if (!isValidIP(cleaned)) {
-      setError("Invalid IP address format");
-      return;
-    }
+return (
+  `${pad(d.getMonth() + 1)}/${pad(d.getDate())}/${d.getFullYear()} ` +
+  `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
+);
 
-    try {
-      setLoading(true);
 
-      const response = await fetch("https://shemya-backend.onrender.com/lookup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          search: cleaned,
-          date,
-        }),
-      });
+};
 
-      const data = await response.json();
+const handleSearch = async () => {
+setError("");
+setResults([]);
+setHasSearched(true);
+=
+const cleaned = search.trim();
 
-      if (!response.ok) {
-        setError(data.error || "Server error");
-        return;
-      }
+if (!cleaned) {
+  setError("Enter IP address");
+  return;
+}
 
-      setResults(data.results || []);
-    } catch (err) {
-      setError("Server not reachable");
-    } finally {
-      setLoading(false);
-    }
-  };
+if (!date) {
+  setError("Select a date");
+  return;
+}
 
-  // ---------------------------
-  // PDF RECEIPT
-  // ---------------------------
-  const downloadPDF = (item) => {
-    const doc = new jsPDF();
+if (!isValidIP(cleaned)) {
+  setError("Invalid IP address format");
+  return;
+}
 
-    doc.setFont("helvetica", "bold");
-    doc.text("SHEMYANET RECEIPT", 20, 20);
+try {
+  setLoading(true);
 
-    doc.setFont("helvetica", "normal");
+  const response = await fetch("https://shemya-backend.onrender.com/lookup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      search: cleaned,
+      date
+    })
+  });
 
-    doc.text(`Transaction ID: ${item.billingId}`, 20, 40);
-    doc.text(`Access Code: ${item.userId}`, 20, 50);
-    doc.text(`IP Address: ${item.ipAddress}`, 20, 60);
-    doc.text(`MAC Address: ${item.macAddress}`, 20, 70);
-    doc.text(`Plan: ${item.planName}`, 20, 80);
-    doc.text(`Date: ${formatPOSDate(item.transactionDatetimeLocal)}`, 20, 90);
-    doc.text(`TOTAL: $${item.amount}`, 20, 100);
+  const data = await response.json();
 
-    doc.save(`receipt_${item.billingId}.pdf`);
-  };
+  if (!response.ok) {
+    setError(data.error || "Server error");
+    return;
+  }
 
-  return (
-    <div className="container">
-      <img src={logo} alt="ShemyaNet Logo" className="logo" />
-      <h1 className="title">ShemyaNet Transaction Lookup</h1>
+  setResults(data.results || []);
+} catch (err) {
+  setError("Server not reachable");
+} finally {
+  setLoading(false);
+}
 
-      {/* SEARCH */}
-      <div className="search-box">
-        <label className="search-label">Select Date</label>
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
 
-        <input
-          type="text"
-          placeholder="Enter IP address only (e.g. 10.0.0.0)"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+};
 
-        <button onClick={handleSearch}>Search</button>
-      </div>
+const downloadPDF = (item) => {
+const doc = new jsPDF();
 
-      {/* STATUS */}
-      {loading && <p className="info">Loading...</p>}
-      {error && <p className="error">{error}</p>}
 
-      {/* RESULTS */}
-      <div className="results">
-        {results.length === 0 && !loading && !error && (
-          <p className="info">No results found</p>
-        )}
+doc.setFont("helvetica", "bold");
+doc.text("SHEMYANET RECEIPT", 20, 20);
 
-        {results.map((item, index) => (
-          <div className="receipt" key={index}>
-            <div className="receipt-header">
-              <h2>SHEMYANET RECEIPT</h2>
-              <p>Transaction Record</p>
-            </div>
+doc.setFont("helvetica", "normal");
+doc.text(`Transaction ID: ${item.billingId}`, 20, 40);
+doc.text(`Access Code: ${item.userId}`, 20, 50);
+doc.text(`IP Address: ${item.ipAddress}`, 20, 60);
+doc.text(`MAC Address: ${item.macAddress}`, 20, 70);
+doc.text(`Plan: ${item.planName}`, 20, 80);
+doc.text(`Date: ${formatPOSDate(item.transactionDatetimeLocal)}`, 20, 90);
+doc.text(`TOTAL: $${item.amount}`, 20, 100);
 
-            <div className="divider" />
+doc.save(`receipt_${item.billingId}.pdf`);
 
-            <div className="row">
-              <span>Transaction ID</span>
-              <span>{item.billingId}</span>
-            </div>
 
-            <div className="row">
-              <span>Access Code</span>
-              <span>{item.userId}</span>
-            </div>
+};
 
-            <div className="row">
-              <span>IP</span>
-              <span>{item.ipAddress}</span>
-            </div>
+return ( <div className="container"> <img src={logo} alt="ShemyaNet Inc." className="logo" />
 
-            <div className="row">
-              <span>MAC</span>
-              <span>{item.macAddress}</span>
-            </div>
 
-            <div className="row">
-              <span>Plan</span>
-              <span>{item.planName}</span>
-            </div>
+  <h1 className="title">ShemyaNet Transaction Lookup</h1>
 
-            <div className="row">
-              <span>Date</span>
-              <span>{formatPOSDate(item.transactionDatetimeLocal)}</span>
-            </div>
-
-            <div className="divider" />
-
-            <div className="total">
-              <span>TOTAL</span>
-              <span>${item.amount}</span>
-            </div>
-
-            <button className="btn" onClick={() => downloadPDF(item)}>
-              Download Receipt
-            </button>
-          </div>
-        ))}
-      </div>
+  <div className="search-box">
+    <div className="field-group">
+      <label className="search-label">Search Date</label>
+      <input
+        type="date"
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
+      />
     </div>
-  );
+
+    <div className="field-group">
+      <label className="search-label">IP Address</label>
+      <input
+        type="text"
+        placeholder="Enter IP address only"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+    </div>
+
+    <button onClick={handleSearch} disabled={loading}>
+      {loading ? "Searching..." : "Search"}
+    </button>
+  </div>
+
+  {loading && <p className="info">Loading...</p>}
+  {error && <p className="error">{error}</p>}
+
+  <div className="results">
+    {hasSearched && results.length === 0 && !loading && !error && (
+      <p className="info">No results found</p>
+    )}
+
+    {results.map((item, index) => (
+      <div className="receipt" key={index}>
+        <div className="receipt-header">
+          <h2>SHEMYANET RECEIPT</h2>
+          <p>Transaction Record</p>
+        </div>
+
+        <div className="divider" />
+
+        <div className="row">
+          <span>Transaction ID</span>
+          <span>{item.billingId}</span>
+        </div>
+
+        <div className="row">
+          <span>Access Code</span>
+          <span>{item.userId}</span>
+        </div>
+
+        <div className="row">
+          <span>IP</span>
+          <span>{item.ipAddress}</span>
+        </div>
+
+        <div className="row">
+          <span>MAC</span>
+          <span>{item.macAddress}</span>
+        </div>
+
+        <div className="row">
+          <span>Plan</span>
+          <span>{item.planName}</span>
+        </div>
+
+        <div className="row">
+          <span>Date</span>
+          <span>{formatPOSDate(item.transactionDatetimeLocal)}</span>
+        </div>
+
+        <div className="divider" />
+
+        <div className="total">
+          <span>TOTAL</span>
+          <span>${item.amount}</span>
+        </div>
+
+        <button className="btn" onClick={() => downloadPDF(item)}>
+          Download Receipt
+        </button>
+      </div>
+    ))}
+  </div>
+</div>
+
+
+);
 }
 
 export default App;
