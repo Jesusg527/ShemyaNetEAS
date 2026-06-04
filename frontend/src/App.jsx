@@ -129,7 +129,7 @@ return ( <div className="container"> <img src={logo} alt="ShemyaNet Inc." classN
       <label className="search-label">IP Address</label>
       <input
         type="text"
-        placeholder="Enter IP address only"
+        placeholder="Enter IP address only: (e.g. 10.0.0.0)"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
