@@ -40,7 +40,7 @@ const handleSearch = async () => {
 setError("");
 setResults([]);
 setHasSearched(true);
-=
+
 const cleaned = search.trim();
 
 if (!cleaned) {
