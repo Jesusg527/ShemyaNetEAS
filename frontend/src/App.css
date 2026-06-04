@@ -29,11 +29,11 @@ LOGO
 ========================= */
 
 .logo {
-display: block;
-margin: 0 auto 15px;
-width: 100%;
-max-width: 500px;
-height: auto;
+  display: block;
+  margin: 0 0 15px 0;
+  max-width: 200px;
+  width: 100%;
+  height: auto;
 }
 
 /* =========================

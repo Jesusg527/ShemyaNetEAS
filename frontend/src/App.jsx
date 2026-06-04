@@ -117,7 +117,7 @@ return ( <div className="container"> <img src={logo} alt="ShemyaNet Inc." classN
 
   <div className="search-box">
     <div className="field-group">
-      <label className="search-label">Search Date</label>
+      <label className="search-label">Purchase Date</label>
       <input
         type="date"
         value={date}
